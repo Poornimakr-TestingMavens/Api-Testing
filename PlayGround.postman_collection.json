@@ -1,0 +1,512 @@
+{
+	"info": {
+		"_postman_id": "2dd4af81-998e-4afb-aa61-fb29515c503c",
+		"name": "PlayGround",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46798601",
+		"_collection_link": "https://poornimakr-839586.postman.co/workspace/Poornima-K-R's-Workspace~9d900dad-534e-4214-8100-73a0b9038f97/collection/46798601-2dd4af81-998e-4afb-aa61-fb29515c503c?action=share&source=collection_link&creator=46798601"
+	},
+	"item": [
+		{
+			"name": "url",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}",
+					"host": [
+						"{{baseurl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signinpage",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/signin",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try \r",
+							"{\r",
+							"    const res = pm.response.json();\r",
+							"\r",
+							"    pm.test(\"Token received\", function () {\r",
+							"        pm.expect(res.token).to.exist;\r",
+							"    });\r",
+							"    pm.environment.set(\"auth_token\", res.token);\r",
+							"   \r",
+							"} \r",
+							"catch (err)\r",
+							"{\r",
+							" \r",
+							"    console.log(\"no token:\", pm.response.text());\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{loginurl}}/api/auth/login",
+					"host": [
+						"{{loginurl}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// let products = pm.response.json().products;\r",
+							"\r",
+							"// // Check product list is not empty\r",
+							"// pm.test(\"Product list returned\", function () {\r",
+							"//     pm.expect(products.length).to.be.above(0);\r",
+							"// });\r",
+							"\r",
+							"// // Pick a random index\r",
+							"// let randomIndex = Math.floor(Math.random() * products.length);\r",
+							"\r",
+							"// // Store that product's details in environment variables\r",
+							"// let selectedProduct = products[randomIndex];\r",
+							"\r",
+							"// pm.environment.set(\"product_id\", selectedProduct._id);\r",
+							"let products = pm.response.json().products;\r",
+							"\r",
+							"// Limit to first 12 products\r",
+							"// let csv = \"productId,quantity\\n\"; // header\r",
+							"\r",
+							"// for (let i = 0; i < 12 && i < products.length; i++) {\r",
+							"//     let id = products[i]._id;\r",
+							"//     csv += `${id},1\\n`; // default quantity = 1\r",
+							"// }\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{loginurl}}/api/products",
+					"host": [
+						"{{loginurl}}"
+					],
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add to cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Cart updated successfully\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"    \r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"productId\": \"{{productId}}\",\r\n  \"quantity\": {{quantity}}\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{loginurl}}/api/cart/",
+					"host": [
+						"{{loginurl}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "wishlist",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://maven-store-backend.vercel.app/api/wishlist/",
+					"protocol": "https",
+					"host": [
+						"maven-store-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"wishlist",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let res = pm.response.json();\r",
+							"let items = res.items || [];\r",
+							"\r",
+							"// Pull current row's productId from CSV, not from env\r",
+							"let expectedProductId = pm.iterationData.get(\"productId\");\r",
+							"\r",
+							"pm.test(\"Cart has at least one item\", function () {\r",
+							"    pm.expect(items.length).to.be.above(0);\r",
+							"});\r",
+							"\r",
+							"let match = items.some(item => item.productId._id === expectedProductId);\r",
+							"\r",
+							"pm.test(`CSV product (${expectedProductId}) is present in the cart`, function () {\r",
+							"    pm.expect(match).to.be.true;\r",
+							"});\r",
+							"\r",
+							"// Optional: subtotal + total calc\r",
+							"let subtotal = 0;\r",
+							"items.forEach(item => {\r",
+							"    let price = item.productId.price;\r",
+							"    let quantity = item.quantity;\r",
+							"    subtotal += price * quantity;\r",
+							"});\r",
+							"let shipping = 20;\r",
+							"pm.environment.set(\"subtotal\", subtotal);\r",
+							"pm.environment.set(\"total\", subtotal + shipping);\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "accept-language",
+						"value": "en-US,en;q=0.9,en-IN;q=0.8"
+					},
+					{
+						"key": "authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODgwZDNhN2EzMjYyNTE0ZmY0MWY0ZjYiLCJpYXQiOjE3NTM3NjgyMTcsImV4cCI6MTc1Mzg1NDYxN30.DiNhlRWMQZDxytlG3TNOjmbvK0fwgqQ3-YMsi-6s2b4"
+					},
+					{
+						"key": "origin",
+						"value": "https://www.playground.testingmavens.tools"
+					},
+					{
+						"key": "priority",
+						"value": "u=1, i"
+					},
+					{
+						"key": "referer",
+						"value": "https://www.playground.testingmavens.tools/"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Microsoft Edge\";v=\"138\""
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Windows\""
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "cross-site"
+					},
+					{
+						"key": "ssid",
+						"value": "bd8b5e1d-3b42-4b69-9e2b-fa266e3dc0ed"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0"
+					}
+				],
+				"url": {
+					"raw": "https://maven-store-backend.vercel.app/api/cart/",
+					"protocol": "https",
+					"host": [
+						"maven-store-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"cart",
+						""
+					]
+				},
+				"description": "Generated from cURL: curl 'https://maven-store-backend.vercel.app/api/cart/' \\\r\n  -H 'accept: application/json, text/plain, */*' \\\r\n  -H 'accept-language: en-US,en;q=0.9,en-IN;q=0.8' \\\r\n  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODgwZDNhN2EzMjYyNTE0ZmY0MWY0ZjYiLCJpYXQiOjE3NTM3NjgyMTcsImV4cCI6MTc1Mzg1NDYxN30.DiNhlRWMQZDxytlG3TNOjmbvK0fwgqQ3-YMsi-6s2b4' \\\r\n  -H 'origin: https://www.playground.testingmavens.tools' \\\r\n  -H 'priority: u=1, i' \\\r\n  -H 'referer: https://www.playground.testingmavens.tools/' \\\r\n  -H 'sec-ch-ua: \"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Microsoft Edge\";v=\"138\"' \\\r\n  -H 'sec-ch-ua-mobile: ?0' \\\r\n  -H 'sec-ch-ua-platform: \"Windows\"' \\\r\n  -H 'sec-fetch-dest: empty' \\\r\n  -H 'sec-fetch-mode: cors' \\\r\n  -H 'sec-fetch-site: cross-site' \\\r\n  -H 'ssid: bd8b5e1d-3b42-4b69-9e2b-fa266e3dc0ed' \\\r\n  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0'"
+			},
+			"response": []
+		},
+		{
+			"name": "payment gateway",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/paymentgateway",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"paymentgateway"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "place order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let res = pm.response.json();\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fullName\":\"charles leclerc\",\r\n    \"email\":\"charles@gmail.com\",\r\n    \"address\":\"bbaa\",\r\n    \"phone\":1010101012,\r\n    \"subtotal\": {{subtotal}},\r\n    \"shippingCharge\": {{shippingCharge}},\r\n    \"total\": {{total}}\r\n\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{loginurl}}/api/order",
+					"host": [
+						"{{loginurl}}"
+					],
+					"path": [
+						"api",
+						"order"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
