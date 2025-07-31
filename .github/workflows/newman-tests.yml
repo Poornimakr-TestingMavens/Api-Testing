@@ -1,0 +1,36 @@
+name: Run Postman Tests
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  newman-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run Newman tests
+        run: |
+          newman run PlayGround.postman_collection.json \
+            -e PlayGround.postman_environment.json \
+            --iteration-data playground_testdata.csv \
+            --reporters cli,html \
+            --reporter-html-export newman-report.html
+
+      - name: Upload HTML Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: newman-report
+          path: newman-report.html
