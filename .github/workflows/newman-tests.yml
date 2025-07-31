@@ -23,8 +23,8 @@ jobs:
 
       - name: Run Newman tests
         run: |
-          newman run PlayGround.postman_collection.json \
-            -e PlayGround.postman_environment.json \
+          newman run playGround.postman_collection.json \
+            -e playGround.postman_environment.json \
             --iteration-data playground_testdata.csv \
             --reporters cli,html \
             --reporter-html-export newman-report.html
