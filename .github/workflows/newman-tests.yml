@@ -18,8 +18,11 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Newman
-        run: npm install -g newman
+      - name: Install Newman and HTML Reporter
+        run: npm install -g newman newman-reporter-html
+
+      - name: Create output directory
+        run: mkdir -p newman
 
       - name: Run Newman tests
         run: |
@@ -27,11 +30,13 @@ jobs:
             -e playground.postman_environment.json \
             --iteration-data playground_testdata.csv \
             --reporters cli,html \
-            --reporter-html-export newman-report.html
+            --reporter-html-export newman/newman-report.html
+
+      - name: Verify report file exists
+        run: ls -R newman
 
       - name: Upload HTML Report
         uses: actions/upload-artifact@v4
         with:
           name: newman-report
-          path: newman-report.html
-
+          path: newman/newman-report.html
